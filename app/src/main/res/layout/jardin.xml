@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lumiere"
+        android:id="@+id/switch_lumExt"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Piscine"
+        android:id="@+id/switch_piscine"
+        android:layout_below="@+id/switch_lumExt"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="arrosage automatique"
+        android:id="@+id/switch_arrosage"
+        android:layout_alignTop="@+id/switch_lumExt"
+        android:layout_alignParentEnd="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="garrage"
+        android:id="@+id/switch_garrage"
+        android:layout_alignTop="@+id/switch_piscine"
+        android:layout_alignEnd="@+id/switch_arrosage" />
+
+</RelativeLayout>
