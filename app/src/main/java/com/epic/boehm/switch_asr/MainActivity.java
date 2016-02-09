@@ -2,6 +2,7 @@ package com.epic.boehm.switch_asr;
 
 import android.app.PendingIntent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -9,6 +10,7 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
@@ -21,6 +23,8 @@ import android.view.MenuItem;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -64,6 +68,13 @@ import android.view.MenuItem;
 import android.widget.GridLayout.LayoutParams;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+
 public class MainActivity extends AppCompatActivity implements
         RecognitionListener {
 
@@ -81,7 +92,12 @@ public class MainActivity extends AppCompatActivity implements
     NfcAdapter nfcAdapter;
     ToggleButton tg1Read;
     TextView txtTagContent;
-    
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(this, "To sync the app with the box you need to activate the NFC in parameters", Toast.LENGTH_LONG).show();
         }
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -277,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements
         Switch clim = (Switch) findViewById(R.id.switch_clim);
         Switch hifi = (Switch) findViewById(R.id.switch_hifi);
 
-        if (text.indexOf("allume") != -1 ) {
+        if (text.indexOf("allume") != -1) {
             if (text.indexOf("lumière") != -1)
                 light.setChecked(true);
             if (text.indexOf("télé") != -1)
@@ -349,7 +368,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     /****************************************************/
 
     @Override
@@ -359,20 +377,18 @@ public class MainActivity extends AppCompatActivity implements
         if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
             Toast.makeText(this, "NfcIntent!", Toast.LENGTH_SHORT).show();
 
-            if(tg1Read.isChecked())
-            {
+            if (tg1Read.isChecked()) {
                 Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
-                if(parcelables != null && parcelables.length > 0)
-                {
+                if (parcelables != null && parcelables.length > 0) {
                     readTextFromMessage((NdefMessage) parcelables[0]);
-                }else{
+                } else {
                     Toast.makeText(this, "No NDEF messages found!", Toast.LENGTH_SHORT).show();
                 }
 
-            }else{
+            } else {
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                NdefMessage ndefMessage = createNdefMessage(txtTagContent.getText()+"");
+                NdefMessage ndefMessage = createNdefMessage(txtTagContent.getText() + "");
 
                 writeNdefMessage(tag, ndefMessage);
             }
@@ -384,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements
 
         NdefRecord[] ndefRecords = ndefMessage.getRecords();
 
-        if(ndefRecords != null && ndefRecords.length>0){
+        if (ndefRecords != null && ndefRecords.length > 0) {
 
             NdefRecord ndefRecord = ndefRecords[0];
 
@@ -392,8 +408,7 @@ public class MainActivity extends AppCompatActivity implements
 
             txtTagContent.setText(tagContent);
 
-        }else
-        {
+        } else {
             Toast.makeText(this, "Empty Tag (no NDFE)", Toast.LENGTH_SHORT).show();
         }
 
@@ -508,13 +523,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void tglReadOnClick(View view){
+    public void tglReadOnClick(View view) {
         txtTagContent.setText("");
     }
 
 
-    public String getTextFromNdefRecord(NdefRecord ndefRecord)
-    {
+    public String getTextFromNdefRecord(NdefRecord ndefRecord) {
         String tagContent = null;
         try {
             byte[] payload = ndefRecord.getPayload();
@@ -527,8 +541,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         return tagContent;
     }
-
-
 }
 
 
